@@ -38,6 +38,7 @@ class(co2)
 ```
 ## [1] "ts"
 ```
+
 --- .
 
 ## Mauna Loa Co2 Predictions

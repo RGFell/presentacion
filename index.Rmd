@@ -20,6 +20,7 @@ knit        : slidify::knit2slides
 head(as.data.frame(co2))
 class(co2)
 ```
+
 --- .
 
 ## Mauna Loa Co2 Predictions
