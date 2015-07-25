@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mauna Loa Atmospeheric Co2 Data Base</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Mauna Loa Atmospeheric Co2 Data Base">
+  <meta name="author" content="Rodrigo Gomez-Fell">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/prettify/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Mauna Loa Atmospeheric Co2 Data Base</h1>
+    <h2>Assignament for the Coursera Data Products Class</h2>
+    <p>Rodrigo Gomez-Fell<br/>Coursera Data Specialization Student</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Mauna Loa Co2 Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Data Sets pacakge that comes in R</li>
+<li>Inludes de Mauna Loa atmospheric meassures of Co2 from January 1958 to December 1997</li>
+</ul>
+
+<pre><code class="r">head(as.data.frame(co2))
+</code></pre>
+
+<pre><code>##        x
+## 1 315.42
+## 2 316.31
+## 3 316.50
+## 4 317.56
+## 5 318.13
+## 6 318.00
+</code></pre>
+
+<pre><code class="r">class(co2)
+</code></pre>
+
+<pre><code>## [1] &quot;ts&quot;
+</code></pre>
+
+<p>--- .</p>
+
+<h2>Mauna Loa Co2 Predictions</h2>
+
+<p>But the project that meassures Co2 in Mauna Loa is still running so there a larger data set now. <a href="http://www.esrl.noaa.gov/gmd/ccgg/trends/">Mauna Loa web</a></p>
+
+<p>So the ShinyApp build generates a prediction bewtween 72 to 144 months, depending of what the user want.</p>
+
+<p>Also you can zoom in or out a certain period.</p>
+
+<p><a href="https://rgfell.shinyapps.io/MaunaLoa">Link to the Shiny MaunaLoa App</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Mauna Loa R Data Set Visualization</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>We use dygraphs package to create the shinyApp. <a href="https://rstudio.github.io/dygraphs/">dygraphs</a></p>
+
+<p>Sadly I couldnt make it to work with slidyf, so here is a code chunk of the Server file.</p>
+
+<pre><code>shinyServer(function(input, output) {
+
+        predicted &lt;- reactive({
+                co &lt;- HoltWinters(db.ts)
+                predict(co, n.ahead = input$months, 
+                        prediction.interval = TRUE,
+                        level = as.numeric(input$interval))
+        })
+
+        output$dygraph &lt;- renderDygraph({
+                dygraph(predicted(), main = &quot;Predicted co2 emissions from Mauna Loa&quot;) %&gt;%
+                        dySeries(c(&quot;lwr&quot;, &quot;fit&quot;, &quot;upr&quot;), label = &quot;Co2&quot;,
+                                 color=RColorBrewer::brewer.pal(3, &quot;Set1&quot;)) %&gt;%
+                        dyOptions(drawGrid = input$showgrid) %&gt;% 
+                        dyRangeSelector(input$series_date_window)
+        })
+
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Mauna Loa Visualizing Predictions</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="figures/MaunaLoaPred.png" alt="Shiny image visualization"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Mauna Loa Co2 Data'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Mauna Loa R Data Set Visualization'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Mauna Loa Visualizing Predictions'>
+         3
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- Google Prettify -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+  <script src='libraries/highlighters/prettify/js/lang-r.js'></script>
+  <script>
+    var pres = document.getElementsByTagName("pre");
+    for (var i=0; i < pres.length; ++i) {
+      pres[i].className = "prettyprint linenums";
+    }
+    prettyPrint();
+  </script>
+  <!-- End Google Prettify --> 
+  </html>
